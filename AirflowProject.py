@@ -3,10 +3,16 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime,timedelta
 from pyspark.sql import SparkSession
+from airflow.providers.http.sensors.http import HttpSensor
+from airflow.providers.http.operators.http import SimpleHttpOperator
+from airflow.operators.email_operator import EmailOperator
 
 default_args={
         'owner':'Ranga',
-        'start_date':datetime(2023,5,5),
+        'start_date':datetime(2023,4,5),
+        'email' :['abhishekgole747@gmail.com'],
+        'email_on_failure': False,
+        'email_on_retry': False,
         'retries':3,
         'retry_delay':timedelta(minutes=5)
         }
@@ -63,6 +69,12 @@ task2 = PythonOperator(
 
 # Task 3: Dummy Operator to end the task
 task3 = DummyOperator(task_id='end_task', dag=Timberland_stock_analysis)
+email_task = EmailOperator(
+        task_id="email_task",
+        to=['abhishekgole747@gmail.com'],
+        subject="Airflow successfull!",
+        html_content="<i>Message from Airflow -->the output file is generated t</i>"
+        )
 
 # Define task dependencies
-task1 >> task2 >> task3
+task1 >> task2 >> task3 >>email_task
