@@ -9,7 +9,6 @@ from airflow.operators.email_operator import EmailOperator
 
 default_args={
         'owner':'Ranga',
-        'start_date':datetime(2023,4,5),
         'email' :['abhishekgole747@gmail.com'],
         'email_on_failure': False,
         'email_on_retry': False,
@@ -21,6 +20,7 @@ Timberland_stock_analysis= DAG(
         'Timberland_stock_analysis',
         default_args=default_args,
         description='Timberland_stock_analysis',
+        'start_date':datetime(2023,4,5),
         schedule_interval='* * * * *',
         catchup=False,
         tags=['example,helloworld']
